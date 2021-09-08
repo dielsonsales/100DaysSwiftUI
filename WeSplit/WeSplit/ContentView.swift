@@ -8,27 +8,35 @@
 import SwiftUI
 
 struct ContentView: View {
-    @State var tapCount = 0
-    let items = ["One", "Two", "Three"]
-    @State private var selectedItem = 0
+    @State private var checkAmount = ""
+    @State private var numberOfPeople = 2
+    @State private var tipPercentage = 2
+    let tipPercentages = [10, 15, 20, 25, 0]
     var body: some View {
         NavigationView {
-            VStack {
-                Button("Tap count: \(tapCount)") {
-                    self.tapCount += 1
-                }
-                Form {
-                    ForEach(0 ..< self.items.count) { index in
-                        Text("\(self.items[index])")
+            Form {
+                Section {
+                    TextField("Amount", text: $checkAmount)
+                        .keyboardType(.decimalPad)
+                    Picker("Number of people", selection: $numberOfPeople) {
+                        ForEach(2 ..< 100) {
+                            Text("\($0) people")
+                        }
                     }
                 }
-                .navigationBarTitle("WeSplit")
-                Picker("Select something", selection: $selectedItem) {
-                    ForEach(0 ..< self.items.count) { index in
-                        Text(self.items[index])
+                Section(header: Text("How much tip do you want to leave?")) {
+                    Picker("Tip percentage", selection: $tipPercentage) {
+                        ForEach(0 ..< tipPercentages.count) {
+                            Text("\(self.tipPercentages[$0])%")
+                        }
                     }
+                    .pickerStyle(SegmentedPickerStyle())
+                }
+                Section {
+                    Text(checkAmount)
                 }
             }
+            .navigationBarTitle("WeSplit")
         }
     }
 }
